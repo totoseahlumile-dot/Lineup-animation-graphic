@@ -1,0 +1,164 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+.tlx{--teal:#00574f;--st:130ms;--dist:40px;--ease:cubic-bezier(.22,1,.36,1);counter-reset:tlxsquad;position:relative;width:100%;padding:8px 0;font-family:inherit}
+.tlx *{box-sizing:border-box}
+.tlx-cards{position:relative;z-index:1;display:flex;flex-wrap:wrap;justify-content:center;gap:24px}
+.tlx-card{counter-increment:tlxsquad;position:relative;overflow:hidden;flex:0 0 calc((100% - 72px)/4);background-color:rgba(246,252,250,.88);background-image:linear-gradient(var(--teal),var(--teal));background-repeat:no-repeat;background-position:0 0;background-size:100% 3px;border:1px solid #cfe8e2;border-radius:14px;padding:40px 22px 32px;text-align:center;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s var(--ease);will-change:transform,opacity}
+.tlx-card::after{content:"0" counter(tlxsquad);position:absolute;top:14px;left:18px;font:700 18px/1 "Oswald","Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.08em;color:var(--teal);opacity:.35;pointer-events:none;z-index:2}
+.tlx-card::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.85) 50%,transparent 70%);transform:translateX(-130%);opacity:0}
+.tlx--ready:not(.is-cards) .tlx-card{opacity:0}
+.tlx--ready:not(.is-cards) .tlx-icon{opacity:0}
+.tlx-icon{font-size:48px;color:var(--teal);line-height:1;height:56px;display:flex;align-items:center;justify-content:center;transition:transform .3s var(--ease),filter .3s var(--ease)}
+.tlx-title{margin:18px 0 10px;font-size:24px;font-weight:700;line-height:1.2;color:var(--teal)}
+.tlx-text{margin:0;font-size:16px;line-height:1.6;color:#4a5563}
+
+.is-cards .tlx-card{animation:tlxCard .7s var(--ease) backwards,tlxLine .8s var(--ease) backwards;animation-delay:calc(var(--i)*var(--st))}
+.is-cards .tlx-card::before{animation:tlxShine .9s ease-out backwards;animation-delay:calc(var(--i)*var(--st) + 450ms)}
+.is-cards .tlx-icon{animation:tlxLand .4s var(--ease) backwards;animation-delay:calc(var(--i)*var(--st) + 750ms)}
+.is-cards .tlx-title{animation:tlxText .5s var(--ease) backwards;animation-delay:calc(var(--i)*var(--st) + 300ms)}
+.is-cards .tlx-text{animation:tlxText .5s var(--ease) backwards;animation-delay:calc(var(--i)*var(--st) + 400ms)}
+
+.tlx-card:hover,.tlx-card:focus-within{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,87,79,.18);border-color:rgba(0,87,79,.45)}
+.tlx-card:hover .tlx-icon,.tlx-card:focus-within .tlx-icon{transform:scale(1.12);filter:drop-shadow(0 0 10px rgba(0,87,79,.45))}
+.tlx-card:hover::before{animation:tlxShine .9s ease-out}
+
+.tlx-pitch{position:absolute;inset:0;z-index:0;opacity:0;pointer-events:none}
+.tlx-pitch svg{width:100%;height:100%;display:block}
+.tlx-pl{fill:none;stroke:#00574f;stroke-width:2;stroke-dasharray:1;stroke-dashoffset:1}
+.is-pitch .tlx-pitch{opacity:.4;transition:opacity .4s}
+.is-pitch .tlx-pl{animation:tlxDraw 1.1s ease-out forwards}
+.is-cards .tlx-pitch{opacity:.14;transition:opacity 1.4s}
+
+.tlx-tk{position:absolute;z-index:3;width:76px;height:76px;margin:-38px 0 0 -38px;pointer-events:none}
+.tlx-tk-in{position:relative;width:100%;height:100%;opacity:0}
+.is-pitch .tlx-tk-in{animation:tlxTkIn .6s var(--ease) both;animation-delay:calc(.7s + var(--i)*110ms)}
+.tlx-tk-circle{width:76px;height:76px;border-radius:50%;background:#f6fcfa;border:2px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--teal);box-shadow:0 0 0 6px rgba(0,87,79,.12)}
+.tlx-tk-num{position:absolute;top:-8px;left:-8px;min-width:28px;height:24px;padding:0 6px;border-radius:12px;background:var(--teal);color:#fff;font:700 14px/24px "Oswald","Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-align:center}
+.tlx-tk-lab{position:absolute;top:84px;left:50%;transform:translateX(-50%);white-space:nowrap;font:700 13px/1 "Oswald","Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.tlx-tk.flying .tlx-tk-circle{background:transparent;border-color:transparent;box-shadow:none;transition:background .4s,border-color .4s,box-shadow .4s;transition-delay:calc(var(--i)*var(--st) + 150ms)}
+.tlx-tk.flying .tlx-tk-num,.tlx-tk.flying .tlx-tk-lab{opacity:0;transition:opacity .25s;transition-delay:calc(var(--i)*var(--st))}
+
+@keyframes tlxTkIn{0%{opacity:0;transform:scale(.4) translateY(-14px)}60%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes tlxDraw{to{stroke-dashoffset:0}}
+@keyframes tlxCard{from{opacity:0;transform:translateY(var(--dist));clip-path:inset(0 100% 0 0)}to{opacity:1;transform:none;clip-path:inset(-30px)}}
+@keyframes tlxLine{from{background-size:0% 3px}to{background-size:100% 3px}}
+@keyframes tlxShine{0%{transform:translateX(-130%);opacity:0}20%{opacity:1}100%{transform:translateX(130%);opacity:0}}
+@keyframes tlxLand{from{opacity:0;transform:scale(1.15)}to{opacity:1;transform:none}}
+@keyframes tlxText{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+@media (max-width:1024px){
+  .tlx{--dist:32px}
+  .tlx-cards{gap:18px}
+  .tlx-card{flex-basis:calc((100% - 54px)/4);padding:36px 14px 26px}
+  .tlx-title{font-size:20px}
+  .tlx-text{font-size:14px}
+  .tlx-icon{font-size:40px}
+}
+@media (max-width:767px){
+  .tlx{--dist:24px;--st:100ms}
+  .tlx-cards{gap:14px}
+  .tlx-card{flex-basis:calc((100% - 14px)/2)}
+  .tlx-tk,.tlx-tk-circle{width:58px;height:58px}
+  .tlx-tk{margin:-29px 0 0 -29px}
+  .tlx-tk-circle{font-size:26px}
+  .tlx-tk-lab{top:64px;font-size:11px}
+}
+@media (prefers-reduced-motion:reduce){
+  .tlx--ready:not(.is-cards) .tlx-card,.tlx--ready:not(.is-cards) .tlx-icon{opacity:1}
+  .tlx *,.tlx *::before,.tlx *::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="tlx tlx--ready" id="tlx">
+  <div class="tlx-pitch">
+    <svg viewBox="0 0 1000 440" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect class="tlx-pl" pathLength="1" x="10" y="10" width="980" height="420" rx="4"/>
+      <line class="tlx-pl" pathLength="1" x1="500" y1="10" x2="500" y2="430"/>
+      <circle class="tlx-pl" pathLength="1" cx="500" cy="220" r="62"/>
+      <circle class="tlx-pl" pathLength="1" cx="500" cy="220" r="4"/>
+      <rect class="tlx-pl" pathLength="1" x="10" y="110" width="150" height="220"/>
+      <rect class="tlx-pl" pathLength="1" x="10" y="168" width="52" height="104"/>
+      <rect class="tlx-pl" pathLength="1" x="840" y="110" width="150" height="220"/>
+      <rect class="tlx-pl" pathLength="1" x="938" y="168" width="52" height="104"/>
+    </svg>
+  </div>
+
+  <div class="tlx-cards" id="tlx-cards">
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-html5" aria-hidden="true"></i></div><div class="tlx-title">HTML5</div><p class="tlx-text">Expert semantic layout optimization, accessibility requirements compliance, and SEO friendly standards.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-css3-alt" aria-hidden="true"></i></div><div class="tlx-title">CSS3</div><p class="tlx-text">Advanced layouts utilizing modern Grid and Flexbox techniques, smooth transitions, and variable system architecture.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-js" aria-hidden="true"></i></div><div class="tlx-title">JavaScript</div><p class="tlx-text">Dynamic functional programming, ES6+ features implementation, API integrations, and robust DOM event control.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-vuejs" aria-hidden="true"></i></div><div class="tlx-title">Vue.js</div><p class="tlx-text">Component-focused development with reactive state and clean architecture.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-node-js" aria-hidden="true"></i></div><div class="tlx-title">Node.js</div><p class="tlx-text">Server-side JavaScript for APIs, integrations, and scalable back-end logic.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-php" aria-hidden="true"></i></div><div class="tlx-title">PHP</div><p class="tlx-text">Server-side logic, custom plugins, and secure database integration.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fas fa-database" aria-hidden="true"></i></div><div class="tlx-title">MySQL</div><p class="tlx-text">Relational schema design, optimized queries, and reliable data handling.</p></div>
+    <div class="tlx-card"><div class="tlx-icon"><i class="fab fa-wordpress" aria-hidden="true"></i></div><div class="tlx-title">WordPress</div><p class="tlx-text">Custom theme logic, custom post types, and tailored plugin builds.</p></div>
+  </div>
+
+  <div id="tlx-tokens"></div>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById('tlx');
+  if (!root) return;
+  var cards = Array.prototype.slice.call(root.querySelectorAll('.tlx-card'));
+  var holder = document.getElementById('tlx-tokens');
+
+  var pos   = [[8,50],[27,22],[27,50],[27,78],[47,50],[68,35],[68,65],[90,50]];
+  var names = ['HTML5','CSS3','JavaScript','Vue.js','Node.js','PHP','MySQL','WordPress'];
+  var icons = ['fab fa-html5','fab fa-css3-alt','fab fa-js','fab fa-vuejs','fab fa-node-js','fab fa-php','fas fa-database','fab fa-wordpress'];
+  var tokens = [];
+
+  cards.forEach(function (c, i) { c.style.setProperty('--i', i); });
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var inEditor = document.body.classList.contains('elementor-editor-active');
+  if (reduce || inEditor || !('IntersectionObserver' in window) || !Element.prototype.animate) {
+    root.classList.add('is-cards');
+    return;
+  }
+
+  names.forEach(function (n, i) {
+    var t = document.createElement('div');
+    t.className = 'tlx-tk';
+    t.style.left = pos[i][0] + '%';
+    t.style.top = pos[i][1] + '%';
+    t.style.setProperty('--i', i);
+    t.innerHTML = '<div class="tlx-tk-in"><div class="tlx-tk-circle"><i class="' + icons[i] + '" aria-hidden="true"></i></div><span class="tlx-tk-num">0' + (i + 1) + '</span><span class="tlx-tk-lab">' + n + '</span></div>';
+    holder.appendChild(t);
+    tokens.push(t);
+  });
+
+  function fly() {
+    var scale = window.innerWidth <= 767 ? 1.2 : 1.41;
+    tokens.forEach(function (t, i) {
+      var circle = t.querySelector('.tlx-tk-circle').getBoundingClientRect();
+      var target = cards[i].querySelector('.tlx-icon i').getBoundingClientRect();
+      var dx = (target.left + target.width / 2) - (circle.left + circle.width / 2);
+      var dy = (target.top + target.height / 2) - (circle.top + circle.height / 2);
+      var end = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
+      t.animate([
+        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+        { transform: end, opacity: 1, offset: 0.9 },
+        { transform: end, opacity: 0 }
+      ], { duration: 750, delay: i * 130, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'both' });
+      t.classList.add('flying');
+    });
+    root.classList.add('is-cards');
+  }
+
+  var started = false;
+  function run() {
+    if (started) return;
+    started = true;
+    root.classList.add('is-pitch');
+    setTimeout(fly, 2700);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) { run(); io.disconnect(); }
+  }, { threshold: 0.35 });
+  io.observe(root);
+})();
+</script>
